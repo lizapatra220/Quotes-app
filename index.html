@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Dancing+Script:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Volkhov&display=swap" rel="stylesheet">
+    <title>Dynamic api</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(17, 17, 34);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            padding: 10vh 7vw;
+            background-color: rgb(4, 115, 129);
+            width: 50vw;
+            height: 75vh;
+            box-shadow: 0 0 10px gray;
+            border-radius: 10px;
+        }
+
+        .box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            background-color: aliceblue;
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgb(2, 34, 48);
+        }
+
+        .fa-twitter {
+            align-self: flex-end;
+            font-size: 23px;
+            color: rgb(67, 197, 244);
+            margin: 5px 5px 0 0;
+            cursor: pointer;
+        }
+
+        .comma {
+            color: rgba(144, 144, 144, 0.652);
+            font-size: 50px;
+            align-self: flex-start;
+            flex: 0.25;
+            margin: 20px 0 0 40px;
+        }
+
+        #quote {
+            font-family: "Dancing Script", cursive;
+            font-size: 25px;
+            font-weight: bolder;
+            color: rgb(175, 141, 105);
+            align-items: center;
+            flex: 1;
+            margin: 0 40px;
+        }
+
+        #author {
+            align-self: flex-end;
+            font-family: "Acme", sans-serif;
+            font-weight: bolder;
+            color: rgb(102, 82, 59);
+            margin-right: 40px;
+            padding-bottom: 10px;
+        }
+
+        .new {
+            font-family: "Volkhov", serif;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            background-color: rgb(15, 15, 131);
+            border: none;
+            font-size: 20px;
+            border-radius: 0 0 6px 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div id="quotes"></div>
+    <div id="author"></div>
+    <button id ="btn">new Quotes</button>
+    <button id ="tweet">tweet</button> -->
+
+    <div class="container">
+        <div class="box">
+            <i class="fa-brands fa-twitter" id="tweetMe"></i>
+            <i class="fa fa-quote-left comma" aria-hidden="true"></i>
+            <p id="quote">
+                Learn from yesterday, live for today, hope for tomorrow
+            </p>
+            <p id="author">
+                By Albert Einstein
+            </p>
+            <button class="new" id="newQuote">New Quotes</button>
+        </div>
+    </div>
+
+
+    <script>
+        const quotes = document.getElementById("quote");
+        const author = document.getElementById("author");
+        const btn = document.getElementById("newQuote");
+        const tweet = document.getElementById("tweetMe");
+
+        let real = "";
+        let quotesdata = "";
+        const tweetquote = () => {
+            let tweetpost = `https://twitter.com/intent/tweet?text=${quotesdata.text} ${quotesdata.author}`;
+            window.open(tweetpost);
+
+        }
+        const getQuoteNew = () => {
+            let newnum = Math.floor(Math.random() * 1643);
+            // console.log(real[newnum].author);
+            quotesdata = real[newnum];
+            quotes.innerHTML = `${quotesdata.text}`;
+            // author.innerHTML=`${quotesdata.author}`;
+            quotesdata.author == null
+                ? (author.innerHTML = 'unknown')
+                : (author.innerHTML = `${quotesdata.author}`);
+        }
+        const getQuote = async () => {
+            const api = "https://type.fit/api/quotes";
+            try {
+                let data = await fetch(api);
+                real = await data.json();
+                getQuoteNew();
+                // console.log(real.length);
+                // console.log(real[0].text);
+
+            } catch (error) {
+
+            };
+
+        };
+        btn.addEventListener('click', getQuoteNew);
+        tweet.addEventListener('click', tweetquote);
+        getQuote();
+    </script>
+
+
+</body>
+
+</html>
